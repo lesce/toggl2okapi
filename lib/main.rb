@@ -23,8 +23,8 @@ def process_duration ticket_number, date
   (total_seconds/3600.0).round(2)
 end
 
-# retrieve data from csv file
-CSV.foreach 'input.csv' do |row|
+# retrieve data from first csv file
+CSV.foreach Dir['*.csv'].first do |row|
   index += 1
   next if index == 1 # ignore headers
 
