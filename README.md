@@ -9,3 +9,4 @@ From the terminal cd into this directory and run
 
 \#./toggle2okapi
 
+The file timesheet.xlsx should appear in the current directory
