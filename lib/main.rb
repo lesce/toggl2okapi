@@ -34,6 +34,7 @@ CSV.foreach csv_file_name do |row|
   duration      = row[11]
   date          = row[7]
   key           = "#{ticket_number}#{date}"
+  project       = row[3]
 
   if @duration[key].nil?
     @data << OpenStruct.new(
@@ -42,13 +43,16 @@ CSV.foreach csv_file_name do |row|
       task_description: row[5],
       task_number: ticket_number,
       date: date,
-      duration: duration
+      duration: duration,
+      project: project
     )
     @duration[key] = [duration]
   else
     @duration[key] << duration
   end
 end
+
+@data.sort! { |a,b| a.project <=> b.project }
 
 @workbook = RubyXL::Parser.parse("Template_timesheet.xlsx")
 @worksheet = @workbook[0]
@@ -60,8 +64,9 @@ index = 4
 end
 @workbook.write("timesheet.xlsx")
 
-@data.each do |record|
+@data.sort{|x,y| x.project <=> y.project}.each do |record|
   @worksheet[index][0].change_contents(record.date)
+  @worksheet[index][1].change_contents(record.project)
   @worksheet[index][2].change_contents(record.user_name)
   @worksheet[index][3].change_contents(record.task_description)
   @worksheet[index][4].change_contents(process_duration(record.task_number,record.date))
