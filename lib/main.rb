@@ -12,7 +12,11 @@ require 'ostruct'
 index = 0
 
 def extract_ticket_number task_description
-  task_description.split(' ').first if task_description['FFTEC']
+  if task_description['MP']
+    task_description.split(' ').first 
+  else
+    task_description
+  end
 end
 
 def process_duration ticket_number, date
